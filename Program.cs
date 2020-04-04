@@ -8,7 +8,7 @@ namespace Practica2fp2
     {
         static void Main(string[] args)
         {
-            
+            Map mapa = new Map(6, 9);
         }
     }
 }

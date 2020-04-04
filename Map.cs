@@ -36,9 +36,37 @@ namespace Practica2fp2
         public void ReadMap(string file)
         {
             StreamReader f = new StreamReader(file);
-            string mapa = f.ReadToEnd().Trim();
-            Console.Write(mapa);
+            while (!f.EndOfStream)
+            {
+                string linea = f.ReadLine();
+                if (linea.StartsWith("room"))
+                {
+                    CreateRoom(linea);
+                } 
+                else if (linea.StartsWith("item")) CreateItem(linea);             
+            }
         }
+        private void CreateRoom(string habitación)
+        {
+            string[] parteshab = habitación.Split(" ");
+            Room habitat;
+            habitat.name = parteshab[1];
+            habitat.description = ReadDescription(parteshab[2]);
+        }
+        private void CreateItem(string objeto)
+        {
+            string[] partesobjeto = objeto.Split(" ");
+            Item obj;
+            obj.name = partesobjeto[1];
+            obj.weight = int.Parse(partesobjeto[2]);
+            obj.hp = int.Parse(partesobjeto[3]);
+            //obj.description = partesobjeto[5];
+        }
+        private string ReadDescription(string linea)
+        {
+
+        }
+
     }
 }
 
