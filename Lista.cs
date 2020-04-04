@@ -1,9 +1,13 @@
 ﻿using System;
 
-public class Lista
+namespace Practica2fp2
 {
-	public Lista()
-	{
+    public class Lista
+    {
+        public Lista()
+        {
 
-	}
+        }
+    }
 }
+

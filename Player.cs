@@ -1,8 +1,12 @@
 ﻿using System;
-
-public class Player
+namespace Practica2fp2
 {
-	public Player()
-	{
-	}
+    public class Player
+    {
+        public Player()
+        {
+
+        }
+    }
 }
+
