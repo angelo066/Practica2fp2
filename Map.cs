@@ -35,37 +35,81 @@ namespace Practica2fp2
         }
         public void ReadMap(string file)
         {
-            StreamReader f = new StreamReader(file);
-            while (!f.EndOfStream)
+            if (file != null)
             {
-                string linea = f.ReadLine();
-                if (linea.StartsWith("room"))
+                int i = 0;
+                int j = 0;
+                StreamReader f = new StreamReader(file);
+                while (!f.EndOfStream)
                 {
-                    CreateRoom(linea);
-                } 
-                else if (linea.StartsWith("item")) CreateItem(linea);             
+                    string linea = f.ReadLine();
+                    if (linea.StartsWith("room"))
+                    {
+                        rooms[i] = CreateRoom(linea);
+                        i++;
+                    }
+                    else if (linea.StartsWith("conn")) AddConections(linea);
+                    else if (linea.StartsWith("item"))
+                    {
+                        items[j]=CreateItem(linea);
+                        j++;
+                    }
+                }
+            }
+            else throw new Exception("El archivo a leer no existe");
+            
+        }
+        private Room CreateRoom(string habitación)
+        {
+            string[] parteshab = habitación.Split("\""); //Separamos el nombre de la descripción//
+            string[] nombre = parteshab[0].Split(" "); //Lo dividimos entre room y el nombre//
+            Room habitat = new Room();
+            habitat.name = nombre[1];
+            habitat.description = parteshab[1];
+            return habitat;
+        }
+        private Item CreateItem(string objeto)
+        {
+            string[] partesobjeto = objeto.Split("\"");
+            string[] datosobjeto = partesobjeto[0].Split(" ");
+            Item obj;
+            obj.name = datosobjeto[1];
+            obj.weight = int.Parse(datosobjeto[2]);
+            obj.hp = int.Parse(datosobjeto[3]);
+            obj.description = datosobjeto[5];
+            return obj;
+        }
+        private void AddConections(string conexion) //Método auxiliar//
+        {
+            string[] partescon = conexion.Split(" ");
+            int i = 0;
+            while (i < rooms.Length && rooms[i].name != partescon[1]) i++;
+            //throw corta flujo???//
+            if (i == partescon.Length) throw new Exception("Ha habido un problema con los nombres de la habitaciones");
+            else
+            {
+                int j = 0;
+                while (j < rooms.Length && rooms[j].name != partescon[3]) j++;
+                rooms[i].connections[Cardinal(partescon[2])] = j;
             }
         }
-        private void CreateRoom(string habitación)
+        private int Cardinal(string cardinal) //Método auxiliar//
         {
-            string[] parteshab = habitación.Split(" ");
-            Room habitat;
-            habitat.name = parteshab[1];
-            habitat.description = ReadDescription(parteshab[2]);
+            if (cardinal == "n") return 0;
+            else if (cardinal == "s") return 1;
+            else if (cardinal == "e") return 2;
+            else if (cardinal == "w") return 3;
+            else throw new Exception("Ha habido un problema con la dirección de la conexión");
         }
-        private void CreateItem(string objeto)
+        public void Depura()    
         {
-            string[] partesobjeto = objeto.Split(" ");
-            Item obj;
-            obj.name = partesobjeto[1];
-            obj.weight = int.Parse(partesobjeto[2]);
-            obj.hp = int.Parse(partesobjeto[3]);
-            //obj.description = partesobjeto[5];
+            
         }
-        private string ReadDescription(string linea)
+        /*private string ReadDescription(string linea)
         {
+            
+        }*/
 
-        }
 
     }
 }
