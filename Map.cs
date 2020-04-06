@@ -59,24 +59,22 @@ namespace Practica2fp2
             else throw new Exception("El archivo a leer no existe");
             
         }
-        private Room CreateRoom(string habitación)
+        private Room CreateRoom(string habitacion)
         {
-            string[] parteshab = habitación.Split("\""); //Separamos el nombre de la descripción//
-            string[] nombre = parteshab[0].Split(" "); //Lo dividimos entre room y el nombre//
             Room habitat = new Room();
-            habitat.name = nombre[1];
-            habitat.description = parteshab[1];
+            habitat.description = ReadDescription(habitacion);
+            string[] parteshab = habitacion.Split(" ");
+            habitat.name = parteshab[1];
             return habitat;
         }
         private Item CreateItem(string objeto)
         {
-            string[] partesobjeto = objeto.Split("\"");
-            string[] datosobjeto = partesobjeto[0].Split(" ");
             Item obj;
-            obj.name = datosobjeto[1];
-            obj.weight = int.Parse(datosobjeto[2]);
-            obj.hp = int.Parse(datosobjeto[3]);
-            obj.description = datosobjeto[5];
+            obj.description = ReadDescription(objeto);
+            string[] partesItem = objeto.Split(" ");
+            obj.name = partesItem[1];
+            obj.weight = int.Parse(partesItem[2]);
+            obj.hp = int.Parse(partesItem[3]);
             return obj;
         }
         private void AddConections(string conexion) //Método auxiliar//
@@ -101,16 +99,22 @@ namespace Practica2fp2
             else if (cardinal == "w") return 3;
             else throw new Exception("Ha habido un problema con la dirección de la conexión");
         }
-        public void Depura()    
+        private void MeteObjeto(string lugar) //Método auxiliar//
+        {
+            int i = 0;
+            while (i < rooms.Length && rooms[i].name != lugar) i++;
+            rooms[i].itemsInRoom.InsertaIni();
+        }
+        private string ReadDescription(string linea)
+        {
+            string[] partes = linea.Split("\"");
+            return partes[1];
+        }   
+        public void Depura()
         {
             
         }
-        /*private string ReadDescription(string linea)
-        {
-            
-        }*/
-
-
+        
     }
 }
 
