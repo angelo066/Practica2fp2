@@ -93,8 +93,15 @@ namespace Practica2fp2
             obj.description = ReadDescription(objeto);
             string[] partesItem = objeto.Split(" ");
             obj.name = partesItem[1];
-            obj.weight = int.Parse(partesItem[2]);
-            obj.hp = int.Parse(partesItem[3]);
+            try
+            {
+                obj.weight = int.Parse(partesItem[2]);
+                obj.hp = int.Parse(partesItem[3]);
+            }
+            catch
+            {
+                throw new Exception("El peso y el hp deben ser números");
+            }           
             MeteObjeto(partesItem[4], indice);
             return obj;
         }   
@@ -133,6 +140,7 @@ namespace Practica2fp2
         {
             int i = 0;
             while (i < rooms.Length && rooms[i].name != lugar) i++;
+            if (i == rooms.Length) throw new Exception("La habitación no existe");
             rooms[i].itemsInRoom.InsertaIni(indice);
         }
         private void InicializaConn(out int [] conns) //Método auxiliar//
@@ -156,8 +164,7 @@ namespace Practica2fp2
                 Console.WriteLine(rooms[i].name);
                 rooms[i].itemsInRoom.ver();
             } 
-        }*/
-        
+        }*/        
     }
 }
 
