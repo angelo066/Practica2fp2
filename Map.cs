@@ -35,6 +35,9 @@ namespace Practica2fp2
         }
         public void ReadMap(string file)
         {
+            //Se puede usar el método findroomby name para no tener que hacer búsquedas?//
+            //¿Como se supone que tengo que saber en que linea ocurre el error?(Un contador)?//
+            //¿Como se cual es el error?//
             if (file != null)
             {
                 int i = 0;
@@ -51,8 +54,22 @@ namespace Practica2fp2
                     else if (linea.StartsWith("conn")) AddConections(linea);
                     else if (linea.StartsWith("item"))
                     {
-                        items[j]=CreateItem(linea);
+                        items[j]=CreateItem(linea,j);
                         j++;
+                    }
+                    else if (linea.StartsWith("entry"))
+                    {
+                        string[] parteshab = linea.Split(" ");
+                        int k = 0;
+                        while (rooms[k].name != parteshab[1]) k++;
+                        entryRoom = k;
+                    }
+                    else if (linea.StartsWith("exit"))
+                    {
+                        string[] parteshab = linea.Split(" ");
+                        int k = 0;
+                        while (rooms[k].name != parteshab[1]) k++;
+                        rooms[k].exit = true;
                     }
                 }
             }
@@ -65,30 +82,44 @@ namespace Practica2fp2
             habitat.description = ReadDescription(habitacion);
             string[] parteshab = habitacion.Split(" ");
             habitat.name = parteshab[1];
+            habitat.exit = false;
+            InicializaConn(out habitat.connections);
+            habitat.itemsInRoom = new Lista();
             return habitat;
         }
-        private Item CreateItem(string objeto)
-        {
+        private Item CreateItem(string objeto, int indice)  //Añandido un parámetro int que representa su índice en el v
+        {   //Preguntar si usar este índice como parámetro está bien//
             Item obj;
             obj.description = ReadDescription(objeto);
             string[] partesItem = objeto.Split(" ");
             obj.name = partesItem[1];
             obj.weight = int.Parse(partesItem[2]);
             obj.hp = int.Parse(partesItem[3]);
+            MeteObjeto(partesItem[4], indice);
             return obj;
-        }
+        }   
         private void AddConections(string conexion) //Método auxiliar//
         {
             string[] partescon = conexion.Split(" ");
             int i = 0;
             while (i < rooms.Length && rooms[i].name != partescon[1]) i++;
             //throw corta flujo???//
-            if (i == partescon.Length) throw new Exception("Ha habido un problema con los nombres de la habitaciones");
+            if (i == rooms.Length) throw new Exception("Ha habido un problema con los nombres de la habitaciones");
             else
             {
                 int j = 0;
                 while (j < rooms.Length && rooms[j].name != partescon[3]) j++;
-                rooms[i].connections[Cardinal(partescon[2])] = j;
+                if(partescon[2]=="n"|| partescon[2] == "e")
+                {
+                    rooms[i].connections[Cardinal(partescon[2])] = j;
+                    rooms[j].connections[Cardinal(partescon[2])+1] = i;
+                }
+                else if (partescon[2] == "s" || partescon[2] == "w")
+                {
+                    rooms[i].connections[Cardinal(partescon[2])] = j;
+                    rooms[j].connections[Cardinal(partescon[2])-1] = i;
+                }
+                else throw new Exception("Ha habido un problema con la dirección de la conexión");
             }
         }
         private int Cardinal(string cardinal) //Método auxiliar//
@@ -96,24 +127,36 @@ namespace Practica2fp2
             if (cardinal == "n") return 0;
             else if (cardinal == "s") return 1;
             else if (cardinal == "e") return 2;
-            else if (cardinal == "w") return 3;
-            else throw new Exception("Ha habido un problema con la dirección de la conexión");
+            else return 3;            
         }
-        private void MeteObjeto(string lugar) //Método auxiliar//
+        private void MeteObjeto(string lugar, int indice) //Método auxiliar//
         {
             int i = 0;
             while (i < rooms.Length && rooms[i].name != lugar) i++;
-            rooms[i].itemsInRoom.InsertaIni();
+            rooms[i].itemsInRoom.InsertaIni(indice);
+        }
+        private void InicializaConn(out int [] conns) //Método auxiliar//
+        {
+            conns = new int[4];
+            for(int i=0; i < conns.Length; i++)
+            {
+                conns[i] = -1;
+            }
         }
         private string ReadDescription(string linea)
         {
             string[] partes = linea.Split("\"");
             return partes[1];
         }   
-        public void Depura()
+        /*public void Depura()
         {
-            
-        }
+            for (int i = 0; i < nRooms; i++)
+            {
+                //Console.WriteLine(items[i].name + " " + i);
+                Console.WriteLine(rooms[i].name);
+                rooms[i].itemsInRoom.ver();
+            } 
+        }*/
         
     }
 }

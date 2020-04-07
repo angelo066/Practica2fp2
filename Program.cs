@@ -8,7 +8,9 @@ namespace Practica2fp2
     {
         static void Main(string[] args)
         {
-            Map mapa = new Map(6, 9);
+            Map mapa = new Map(18, 8);
+            mapa.ReadMap("mapa.dat");
+            mapa.Depura();
         }
     }
 }
