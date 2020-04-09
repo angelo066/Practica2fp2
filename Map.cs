@@ -35,42 +35,49 @@ namespace Practica2fp2
         }
         public void ReadMap(string file)
         {
-            //Se puede usar el método findroomby name para no tener que hacer búsquedas?//
-            //¿Como se supone que tengo que saber en que linea ocurre el error?(Un contador)?//
-            //¿Como se cual es el error?//
             if (file != null)
             {
                 int i = 0;
                 int j = 0;
                 StreamReader f = new StreamReader(file);
+                int contador = 0; //Para contar las lineas//
                 while (!f.EndOfStream)
                 {
-                    string linea = f.ReadLine();
-                    if (linea.StartsWith("room"))
+                    //try por si hay un problema durante la lectura del mapa//
+                    try
                     {
-                        rooms[i] = CreateRoom(linea);
-                        i++;
+                        string linea = f.ReadLine();
+                        if (linea.StartsWith("room"))
+                        {
+                            rooms[i] = CreateRoom(linea);
+                            i++;
+                        }
+                        else if (linea.StartsWith("conn")) AddConections(linea);
+                        else if (linea.StartsWith("item"))
+                        {
+                            items[j] = CreateItem(linea, j);
+                            j++;
+                        }
+                        else if (linea.StartsWith("entry"))
+                        {
+                            string[] parteshab = linea.Split(" ");
+                            int k = 0;
+                            while (rooms[k].name != parteshab[1]) k++;
+                            entryRoom = k;
+                        }
+                        else if (linea.StartsWith("exit"))
+                        {
+                            string[] parteshab = linea.Split(" ");
+                            int k = 0;
+                            while (rooms[k].name != parteshab[1]) k++;
+                            rooms[k].exit = true;
+                        }
+                        contador++;
                     }
-                    else if (linea.StartsWith("conn")) AddConections(linea);
-                    else if (linea.StartsWith("item"))
+                    catch(Exception e)
                     {
-                        items[j]=CreateItem(linea,j);
-                        j++;
-                    }
-                    else if (linea.StartsWith("entry"))
-                    {
-                        string[] parteshab = linea.Split(" ");
-                        int k = 0;
-                        while (rooms[k].name != parteshab[1]) k++;
-                        entryRoom = k;
-                    }
-                    else if (linea.StartsWith("exit"))
-                    {
-                        string[] parteshab = linea.Split(" ");
-                        int k = 0;
-                        while (rooms[k].name != parteshab[1]) k++;
-                        rooms[k].exit = true;
-                    }
+                        throw new Exception(e.Message + "en la línea" + contador);  
+                    }                
                 }
             }
             else throw new Exception("El archivo a leer no existe");
@@ -87,12 +94,13 @@ namespace Practica2fp2
             habitat.itemsInRoom = new Lista();
             return habitat;
         }
-        private Item CreateItem(string objeto, int indice)  //Añandido un parámetro int que representa su índice en el v
-        {   //Preguntar si usar este índice como parámetro está bien//
+        private Item CreateItem(string objeto, int indice) 
+        {   
             Item obj;
             obj.description = ReadDescription(objeto);
             string[] partesItem = objeto.Split(" ");
             obj.name = partesItem[1];
+            //Try por si los pesos o los hp no son números
             try
             {
                 obj.weight = int.Parse(partesItem[2]);
@@ -108,29 +116,26 @@ namespace Practica2fp2
         private void AddConections(string conexion) //Método auxiliar//
         {
             string[] partescon = conexion.Split(" ");
-            int i = 0;
-            while (i < rooms.Length && rooms[i].name != partescon[1]) i++;
-            //throw corta flujo???//
-            if (i == rooms.Length) throw new Exception("Ha habido un problema con los nombres de la habitaciones");
-            else
+            int i = FindRoomByName(partescon[1]);           //Buscamos habitación incial//
+            int j = FindRoomByName(partescon[3]);           //Buscamos habitación de destino//
+            //Excepción si no se encunetra una//
+            if(i==-1 || j==-1) throw new Exception("Ha habido un problema con los nombres de la habitaciones");
+            //Para hacer las conexiónes inversas comprobamos hacía que direción están las habitaciones
+            if (partescon[2]=="n"|| partescon[2] == "e")
             {
-                int j = 0;
-                while (j < rooms.Length && rooms[j].name != partescon[3]) j++;
-                if(partescon[2]=="n"|| partescon[2] == "e")
-                {
                     rooms[i].connections[Cardinal(partescon[2])] = j;
                     rooms[j].connections[Cardinal(partescon[2])+1] = i;
-                }
-                else if (partescon[2] == "s" || partescon[2] == "w")
+            }
+            else if (partescon[2] == "s" || partescon[2] == "w")
                 {
                     rooms[i].connections[Cardinal(partescon[2])] = j;
                     rooms[j].connections[Cardinal(partescon[2])-1] = i;
                 }
-                else throw new Exception("Ha habido un problema con la dirección de la conexión");
-            }
+            //Si hay un problema con la dirección, excepción//
+            else throw new Exception("Ha habido un problema con la dirección de la conexión");            
         }
         private int Cardinal(string cardinal) //Método auxiliar//
-        {
+        {//Devolvemos un número en función de un cardinal//
             if (cardinal == "n") return 0;
             else if (cardinal == "s") return 1;
             else if (cardinal == "e") return 2;
@@ -138,9 +143,8 @@ namespace Practica2fp2
         }
         private void MeteObjeto(string lugar, int indice) //Método auxiliar//
         {
-            int i = 0;
-            while (i < rooms.Length && rooms[i].name != lugar) i++;
-            if (i == rooms.Length) throw new Exception("La habitación no existe");
+            int i = FindRoomByName(lugar);
+            if (i == -1) throw new Exception("La habitación no existe"); //Si no se encuentra excepción//
             rooms[i].itemsInRoom.InsertaIni(indice);
         }
         private void InicializaConn(out int [] conns) //Método auxiliar//
@@ -154,17 +158,94 @@ namespace Practica2fp2
         private string ReadDescription(string linea)
         {
             string[] partes = linea.Split("\"");
+            if (partes[1] == null) throw new Exception("Descripción nula");
             return partes[1];
         }   
-        /*public void Depura()
+        private int FindItemByName(string itemName)
+        {
+            int indice = -1;
+            int i = 0;
+            while (i<items.Length && items[i].name != itemName) i++;
+            if (i < items.Length) indice = i;
+            return indice;
+        }
+        private int FindRoomByName(string roomName)
+        {
+            int indice = -1;
+            int i = 0;
+            while (i < rooms.Length && rooms[i].name != roomName) i++;
+            if (i < rooms.Length) indice = i;
+            return indice;
+        }
+        private int GetItemWeight(int itemNumber)
+        {
+            return items[itemNumber].weight;
+        }
+        private int GetItemHP(int itemNumber)
+        {
+            return items[itemNumber].hp;
+        }
+        private string PrintItemInfo(int itemNumber)
+        {
+            Item item = items[itemNumber];
+            return item.name + " "+GetItemWeight(itemNumber)+" "+GetItemHP(itemNumber)+" "+item.description;
+        }
+        private string GetRoomInfo(int roomNumber)
+        {
+            return rooms[roomNumber].name +" "+ rooms[roomNumber].description;
+        }
+        private string GetInfoItemsInRoom(int roomNumber)
+        {
+            string info = "";
+            Room habitación = rooms[roomNumber]; //Mayor legibilidad
+            int i = 1;
+            int cota = habitación.itemsInRoom.cuentaEltos(); //Mayor legibilidad//
+            while (i <= cota)
+            {
+                info = info + " " + PrintItemInfo(habitación.itemsInRoom.nEsimo(i))+" ";
+                i++;
+            }
+            return info;
+        }
+        private bool PickItemInRoom(int roomNumber, int itemNumber)
+        {//Borramos el item en cuestión de la habitación
+            Room habitacion = rooms[roomNumber];
+            return habitacion.itemsInRoom.BorraElto(itemNumber); 
+        }
+        private bool IsExit(int roomNumber)
+        {
+            return rooms[roomNumber].exit;
+        }
+        private int GetentryRoom()
+        {
+            return entryRoom;
+        }
+        private string GetMovesInfo(int roomNumber)
+        {
+            string info = "";
+            Room habitación = rooms[roomNumber]; 
+            for(int i = 0; i < habitación.connections.Length; i++)
+            {
+                int indice = habitación.connections[i]; //Mayor legibilidad//
+                if (indice != -1) info = info + CardinalDeNúmero(i) + " " + rooms[indice].name;
+            }
+            return info;
+        }
+        private char CardinalDeNúmero(int numero)
+        {//Devuleve un char en función del número//
+            if (numero == 0) return 'n';
+            else if (numero == 1) return 's';
+            else if (numero == 2) return 'e';
+            else if (numero == 3) return 'w';
+            else return ' ';
+        } //Método auxiliar
+        public void Depura()
         {
             for (int i = 0; i < nRooms; i++)
             {
-                //Console.WriteLine(items[i].name + " " + i);
-                Console.WriteLine(rooms[i].name);
-                rooms[i].itemsInRoom.ver();
+                Console.WriteLine(GetInfoItemsInRoom(i));
             } 
-        }*/        
+        }       
     }
 }
 

@@ -10,7 +10,7 @@ namespace Practica2fp2
         {
             Map mapa = new Map(18, 8);
             mapa.ReadMap("mapa.dat");
-            //mapa.Depura();
+            mapa.Depura();
         }
     }
 }
