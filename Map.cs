@@ -161,7 +161,7 @@ namespace Practica2fp2
             if (partes[1] == null) throw new Exception("Descripción nula");
             return partes[1];
         }   
-        private int FindItemByName(string itemName)
+        public int FindItemByName(string itemName)
         {
             int indice = -1;
             int i = 0;
@@ -207,7 +207,7 @@ namespace Practica2fp2
             }
             return info;
         }
-        private bool PickItemInRoom(int roomNumber, int itemNumber)
+        public bool PickItemInRoom(int roomNumber, int itemNumber)
         {//Borramos el item en cuestión de la habitación
             Room habitacion = rooms[roomNumber];
             return habitacion.itemsInRoom.BorraElto(itemNumber); 
@@ -239,11 +239,15 @@ namespace Practica2fp2
             else if (numero == 3) return 'w';
             else return ' ';
         } //Método auxiliar
+        public int Move(int roomNumber, Direction dir)
+        {
+            return rooms[roomNumber].connections[(int)dir];
+        }
         public void Depura()
         {
-            for (int i = 0; i < nRooms; i++)
+            for (int i = 0; i < 4; i++)
             {
-                Console.WriteLine(GetInfoItemsInRoom(i));
+                
             } 
         }       
     }
