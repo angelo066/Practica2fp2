@@ -38,8 +38,45 @@ namespace Practica2fp2
             return false;
         }
         public void PickItem(Map m, string itemName)
-        {
+        {//guardamos el índice//
+            int objeto = m.FindItemByName(itemName);
+            if (objeto == -1) throw new Exception("No existe el objeto");
+            else if (weight + m.GetItemWeight(objeto) > MAX_WEIGHT) throw new Exception("Llevas demasiado peso en el inventario");
+            //si no lo elimina es que no está//
+            else if (!m.PickItemInRoom(pos, objeto)) throw new Exception("El objeto no esta en la sala");
+            //Si ya lo ha eliminado en la comprobación, lo insertamos en el inventaio//
+            inventory.InsertaIni(objeto);
             
+        }
+        public void EatItem(Map m, string ItemName)
+        {
+            int objeto = m.FindItemByName(ItemName);
+            if (objeto == -1) throw new Exception("El objeto no existe");
+            int itemVida = m.GetItemHP(objeto);
+            if (inventory.cuentaOcurrencias(objeto) == 0) throw new Exception("No llevas ese objeto");
+            else if (itemVida == 0) throw new Exception("Ese objeto no es comestible");
+            else
+            {
+                hp = hp + itemVida;
+                weight = weight - m.GetItemWeight(objeto);
+                inventory.BorraElto(objeto);
+            }         
+        }
+        public string GetInventoryInfo(Map m)
+        {
+            int numeroelementos = inventory.cuentaEltos(); //Mayor legibilidad//
+            if (numeroelementos == 0) return "My bag is empty";
+            string info = "";
+            for(int i = 0; i < numeroelementos; i++)
+            {
+                int indice = inventory.nEsimo(i);           //Mayor legibilidad//
+                info = info + " " + m.PrintItemInfo(indice);
+            }
+            return info;
+        }
+        public string GetPlayerInfo()
+        {
+            return name + " " + hp + " " + weight;
         }
     }
 }

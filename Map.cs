@@ -134,7 +134,7 @@ namespace Practica2fp2
             //Si hay un problema con la dirección, excepción//
             else throw new Exception("Ha habido un problema con la dirección de la conexión");            
         }
-        private int Cardinal(string cardinal) //Método auxiliar//
+        public int Cardinal(string cardinal) //Método auxiliar//
         {//Devolvemos un número en función de un cardinal//
             if (cardinal == "n") return 0;
             else if (cardinal == "s") return 1;
@@ -177,27 +177,28 @@ namespace Practica2fp2
             if (i < rooms.Length) indice = i;
             return indice;
         }
-        private int GetItemWeight(int itemNumber)
+        public int GetItemWeight(int itemNumber)
         {
             return items[itemNumber].weight;
         }
-        private int GetItemHP(int itemNumber)
+        public int GetItemHP(int itemNumber)
         {
             return items[itemNumber].hp;
         }
-        private string PrintItemInfo(int itemNumber)
+        public string PrintItemInfo(int itemNumber)
         {
             Item item = items[itemNumber];
-            return item.name + " "+GetItemWeight(itemNumber)+" "+GetItemHP(itemNumber)+" "+item.description;
+            return item.name + " " + GetItemWeight(itemNumber) + " " + GetItemHP(itemNumber) + " " + item.description + "/";
         }
         private string GetRoomInfo(int roomNumber)
         {
             return rooms[roomNumber].name +" "+ rooms[roomNumber].description;
         }
-        private string GetInfoItemsInRoom(int roomNumber)
+        public string GetInfoItemsInRoom(int roomNumber)
         {
-            string info = "";
             Room habitación = rooms[roomNumber]; //Mayor legibilidad
+            if (habitación.itemsInRoom.cuentaEltos() == 0) return ("I don´t see anything notable here");
+            string info = "";
             int i = 1;
             int cota = habitación.itemsInRoom.cuentaEltos(); //Mayor legibilidad//
             while (i <= cota)
