@@ -79,6 +79,7 @@ namespace Practica2fp2
                         throw new Exception(e.Message + "en la línea" + contador);  
                     }                
                 }
+                f.Close();
             }
             else throw new Exception("El archivo a leer no existe");
             
@@ -190,7 +191,7 @@ namespace Practica2fp2
             Item item = items[itemNumber];
             return item.name + " " + GetItemWeight(itemNumber) + " " + GetItemHP(itemNumber) + " " + item.description + "/";
         }
-        private string GetRoomInfo(int roomNumber)
+        public string GetRoomInfo(int roomNumber)
         {
             return rooms[roomNumber].name +" "+ rooms[roomNumber].description;
         }
@@ -213,15 +214,15 @@ namespace Practica2fp2
             Room habitacion = rooms[roomNumber];
             return habitacion.itemsInRoom.BorraElto(itemNumber); 
         }
-        private bool IsExit(int roomNumber)
+        public bool IsExit(int roomNumber)
         {
             return rooms[roomNumber].exit;
         }
-        private int GetentryRoom()
+        public int GetentryRoom()
         {
             return entryRoom;
         }
-        private string GetMovesInfo(int roomNumber)
+        public string GetMovesInfo(int roomNumber)
         {
             string info = "";
             Room habitación = rooms[roomNumber]; 
@@ -246,9 +247,9 @@ namespace Practica2fp2
         }
         public void Depura()
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 18; i++)
             {
-                
+                Console.WriteLine();
             } 
         }       
     }

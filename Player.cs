@@ -33,6 +33,7 @@ namespace Practica2fp2
             if (destino != -1)
             {
                 pos = destino;
+                hp = hp - HP_PER_MOVEMENT;
                 return true;
             }
             return false;
@@ -66,7 +67,7 @@ namespace Practica2fp2
         {
             int numeroelementos = inventory.cuentaEltos(); //Mayor legibilidad//
             if (numeroelementos == 0) return "My bag is empty";
-            string info = "";
+            string info="";
             for(int i = 0; i < numeroelementos; i++)
             {
                 int indice = inventory.nEsimo(i);           //Mayor legibilidad//
