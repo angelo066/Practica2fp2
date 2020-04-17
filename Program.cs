@@ -19,7 +19,7 @@ namespace Practica2fp2
             Console.WriteLine(mapa.GetRoomInfo(thePLayer.GetPosition()));
             while (!ArrivedAtExit(mapa, thePLayer) && thePLayer.IsAlive() && !quit)
             {
-                Console.WriteLine(mapa.GetMovesInfo(thePLayer.GetPosition()));
+                EscribeCons(mapa, thePLayer);
                 Console.WriteLine("¿Qué quieres hacer?");
                 Console.WriteLine();
                 com = Console.ReadLine();
@@ -40,22 +40,22 @@ namespace Practica2fp2
                 p.Move(m, (Direction)m.Cardinal(com));
                 return true;
             }
-            else if (com == "Muestra inventario")
+            else if (com == "MuestraI")
             {
                 string inventario = p.GetInventoryInfo(m);
-                string[] objeto = inventario.Split("/");
+                string[] objeto = inventario.Split("  ");
                 for (int i = 0; i < objeto.Length; i++)
                 {
                     Console.WriteLine(objeto[i]);
                 }
                 return true;
             }
-            else if (com == "Información player")
+            else if (com == "Infop")
             {
                 Console.WriteLine(p.GetPlayerInfo());
                 return true;
             }
-            else if (com == "Objetos en la habitación")
+            else if (com == "Objetosh")
             {
                 string objetosHabitación = m.GetInfoItemsInRoom(p.GetPosition());
                 string[] objetos = objetosHabitación.Split("/");
@@ -65,7 +65,7 @@ namespace Practica2fp2
                 }
                 return true;
             }
-            else if (com == "Info de la habitación")
+            else if (com == "Infoh")
             {
                 InfoPlace(m, p.GetPosition());
                 return true;
@@ -86,6 +86,7 @@ namespace Practica2fp2
                 try
                 {
                     p.PickItem(m, com);
+                    Console.Write("He cogido el item");
                     return true;
                 }
                 catch
@@ -112,5 +113,11 @@ namespace Practica2fp2
         {
             return m.IsExit(thePlayer.GetPosition());
         }
+        static void EscribeCons(Map m, Player thePLayer)
+        {
+            string conexiones = m.GetMovesInfo(thePLayer.GetPosition());
+            string[] cons = conexiones.Split("  ");
+            for (int i = 0; i < cons.Length; i++) Console.WriteLine(cons[i]);
+        }//Método auxiliar//
     }
 }

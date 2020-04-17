@@ -189,7 +189,7 @@ namespace Practica2fp2
         public string PrintItemInfo(int itemNumber)
         {
             Item item = items[itemNumber];
-            return item.name + " " + GetItemWeight(itemNumber) + " " + GetItemHP(itemNumber) + " " + item.description + "/";
+            return item.name + " " + GetItemWeight(itemNumber) + " " + GetItemHP(itemNumber) + " " + item.description;
         }
         public string GetRoomInfo(int roomNumber)
         {
@@ -229,7 +229,8 @@ namespace Practica2fp2
             for(int i = 0; i < habitación.connections.Length; i++)
             {
                 int indice = habitación.connections[i]; //Mayor legibilidad//
-                if (indice != -1) info = info + CardinalDeNúmero(i) + " " + rooms[indice].name;
+                //dejamos dos espacios entre diferentes conexiones y uno entre cardinal y nombre//
+                if (indice != -1) info = info +"  "+ CardinalDeNúmero(i) +" "+ rooms[indice].name;
             }
             return info;
         }

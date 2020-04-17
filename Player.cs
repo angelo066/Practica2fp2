@@ -47,7 +47,7 @@ namespace Practica2fp2
             else if (!m.PickItemInRoom(pos, objeto)) throw new Exception("El objeto no esta en la sala");
             //Si ya lo ha eliminado en la comprobación, lo insertamos en el inventaio//
             inventory.InsertaIni(objeto);
-            
+            weight = weight + m.GetItemWeight(objeto);           
         }
         public void EatItem(Map m, string ItemName)
         {
@@ -68,16 +68,16 @@ namespace Practica2fp2
             int numeroelementos = inventory.cuentaEltos(); //Mayor legibilidad//
             if (numeroelementos == 0) return "My bag is empty";
             string info="";
-            for(int i = 0; i < numeroelementos; i++)
+            for(int i = 1; i <= numeroelementos; i++)
             {
                 int indice = inventory.nEsimo(i);           //Mayor legibilidad//
-                info = info + " " + m.PrintItemInfo(indice);
+                info = info + "  " + m.PrintItemInfo(indice);
             }
             return info;
         }
         public string GetPlayerInfo()
         {
-            return name + " " + hp + " " + weight;
+            return name+ " " + "hp:" + " " + hp + " "+"Weight:" + weight;
         }
     }
 }
