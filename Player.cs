@@ -8,7 +8,7 @@ namespace Practica2fp2
         int hp; // health points
         int weight; // peso de los objetos que tiene
         Lista inventory; // lista de objetos que lleva
-        const int MAX_HP = 10; // maximo health points
+        const int MAX_HP = 500; // maximo health points
         const int HP_PER_MOVEMENT = 2; // hp consumidos por movimiento
         const int MAX_WEIGHT = 20; // maximo peso que puede llevar
         public Player(string playerName, int entryRoom)
@@ -37,7 +37,7 @@ namespace Practica2fp2
                 return true;
             }
             return false;
-        }
+        } //¿Dónde aplicar este bool?//
         public void PickItem(Map m, string itemName)
         {//guardamos el índice//
             int objeto = m.FindItemByName(itemName);
@@ -50,14 +50,19 @@ namespace Practica2fp2
             weight = weight + m.GetItemWeight(objeto);           
         }
         public void EatItem(Map m, string ItemName)
-        {
+        {//POner else?//
             int objeto = m.FindItemByName(ItemName);
+            //No se encuentra el objeto//
             if (objeto == -1) throw new Exception("El objeto no existe");
             int itemVida = m.GetItemHP(objeto);
+            //El objeto no está en el inventario//
             if (inventory.cuentaOcurrencias(objeto) == 0) throw new Exception("No llevas ese objeto");
+            //El objeto no se puede comer
             else if (itemVida == 0) throw new Exception("Ese objeto no es comestible");
+            //Si se come el objeto sobrepasa la vida máxima//
+            else if (hp + itemVida > MAX_HP) throw new Exception("No puedes sobrepasar la vida máxima");
             else
-            {
+            {//Comerse el objeto//
                 hp = hp + itemVida;
                 weight = weight - m.GetItemWeight(objeto);
                 inventory.BorraElto(objeto);
@@ -71,7 +76,7 @@ namespace Practica2fp2
             for(int i = 1; i <= numeroelementos; i++)
             {
                 int indice = inventory.nEsimo(i);           //Mayor legibilidad//
-                info = info + "  " + m.PrintItemInfo(indice);
+                info = info + "  " + m.PrintItemInfo(indice); //Dos espacios a modo de separador//
             }
             return info;
         }

@@ -40,7 +40,7 @@ namespace Practica2fp2
                 int i = 0;
                 int j = 0;
                 StreamReader f = new StreamReader(file);
-                int contador = 0; //Para contar las lineas//
+                int contador = 1; //Para contar las lineas//
                 while (!f.EndOfStream)
                 {
                     //try por si hay un problema durante la lectura del mapa//
@@ -76,7 +76,7 @@ namespace Practica2fp2
                     }
                     catch(Exception e)
                     {
-                        throw new Exception(e.Message + "en la línea" + contador);  
+                        throw new Exception(e.Message + " en la línea " + contador);  
                     }                
                 }
                 f.Close();
@@ -88,10 +88,10 @@ namespace Practica2fp2
         {
             Room habitat = new Room();
             habitat.description = ReadDescription(habitacion);
-            string[] parteshab = habitacion.Split(" ");
+            string[] parteshab = habitacion.Split(" "); //Separamos las partes de la habitación//
             habitat.name = parteshab[1];
-            habitat.exit = false;
-            InicializaConn(out habitat.connections);
+            habitat.exit = false; //Asumimos que no es la salida//
+            InicializaConn(out habitat.connections); //Incializamos el vector de conexiones//
             habitat.itemsInRoom = new Lista();
             return habitat;
         }
@@ -111,7 +111,7 @@ namespace Practica2fp2
             {
                 throw new Exception("El peso y el hp deben ser números");
             }           
-            MeteObjeto(partesItem[4], indice);
+            MeteObjeto(partesItem[4], indice); //Inserta el objeto en su habitación//
             return obj;
         }   
         private void AddConections(string conexion) //Método auxiliar//
@@ -153,7 +153,7 @@ namespace Practica2fp2
             conns = new int[4];
             for(int i=0; i < conns.Length; i++)
             {
-                conns[i] = -1;
+                conns[i] = -1;                  //El vector empieza con todas las conexiones nulas//
             }
         }
         private string ReadDescription(string linea)
@@ -167,7 +167,7 @@ namespace Practica2fp2
             int indice = -1;
             int i = 0;
             while (i<items.Length && items[i].name != itemName) i++;
-            if (i < items.Length) indice = i;
+            if (i < items.Length) indice = i; //Si lo ha encontrado, lo devolvemos//
             return indice;
         }
         private int FindRoomByName(string roomName)
@@ -175,7 +175,7 @@ namespace Practica2fp2
             int indice = -1;
             int i = 0;
             while (i < rooms.Length && rooms[i].name != roomName) i++;
-            if (i < rooms.Length) indice = i;
+            if (i < rooms.Length) indice = i; //Si ha encontrado la habitación, la devolvemos//
             return indice;
         }
         public int GetItemWeight(int itemNumber)
@@ -199,12 +199,12 @@ namespace Practica2fp2
         {
             Room habitación = rooms[roomNumber]; //Mayor legibilidad
             if (habitación.itemsInRoom.cuentaEltos() == 0) return ("I don´t see anything notable here");
-            string info = "";
+            string info = ""; //Está bien incializar así info?//
             int i = 1;
             int cota = habitación.itemsInRoom.cuentaEltos(); //Mayor legibilidad//
             while (i <= cota)
-            {
-                info = info + " " + PrintItemInfo(habitación.itemsInRoom.nEsimo(i))+" ";
+            {//Dos espacios al final de cada objetos para poder dividirlos bien en otros métodos//
+                info = info + PrintItemInfo(habitación.itemsInRoom.nEsimo(i))+"  ";
                 i++;
             }
             return info;
@@ -245,13 +245,6 @@ namespace Practica2fp2
         public int Move(int roomNumber, Direction dir)
         {
             return rooms[roomNumber].connections[(int)dir];
-        }
-        public void Depura()
-        {
-            for (int i = 0; i < 18; i++)
-            {
-                Console.WriteLine();
-            } 
         }       
     }
 }

@@ -48,19 +48,18 @@ namespace Practica2fp2
             {
                 elementos++;
                 aux = aux.sig;
-            }           //Poniendo aux!=null funciona sin poner el if de abajo//
+            }
             return elementos;
         }
         public int cuentaOcurrencias(int e)
         {
             Nodo aux = pri;
             int contador = 0;
-            while (aux.sig != null)
+            while (aux != null)
             {
                 if (aux.dato == e) contador++;
                 aux = aux.sig;
             }
-            if (aux.dato == e) contador++;
             return contador;
         }
         private Nodo nEsimoNodo(int n)
@@ -169,6 +168,7 @@ namespace Practica2fp2
         }
         public bool BorraElto(int e)
         {
+            //Lista vacía
             if (pri == null) return false;
             else if (pri.dato == e)
             {  // pri no es null				
