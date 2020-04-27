@@ -71,12 +71,7 @@ namespace Practica2fp2
             }
             else if (com == "Inventory")
             {
-                string inventario = p.GetInventoryInfo(m);
-                string[] objeto = inventario.Split("  ");
-                for (int i = 0; i < objeto.Length; i++)
-                {
-                    Console.WriteLine(objeto[i]);
-                }
+                Console.WriteLine(p.GetInventoryInfo(m));
                 return true;
             }
             else if (com == "Me")
@@ -86,12 +81,7 @@ namespace Practica2fp2
             }
             else if (com == "Look")
             {
-                string objetosHabitación = m.GetInfoItemsInRoom(p.GetPosition());
-                string[] objetos = objetosHabitación.Split("  ");
-                for (int i = 0; i < objetos.Length; i++)
-                {
-                    Console.WriteLine(objetos[i]);
-                }
+                Console.WriteLine(m.GetInfoItemsInRoom(p.GetPosition()));
                 return true;
             }
             else if (com == "Info")

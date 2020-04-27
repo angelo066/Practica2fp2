@@ -204,7 +204,7 @@ namespace Practica2fp2
             int cota = habitación.itemsInRoom.cuentaEltos(); //Mayor legibilidad//
             while (i <= cota)
             {//Dos espacios al final de cada objetos para poder dividirlos bien en otros métodos//
-                info = info + PrintItemInfo(habitación.itemsInRoom.nEsimo(i))+"  ";
+                info = info + PrintItemInfo(habitación.itemsInRoom.nEsimo(i))+"\n";
                 i++;
             }
             return info;

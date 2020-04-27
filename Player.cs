@@ -76,7 +76,7 @@ namespace Practica2fp2
             for(int i = 1; i <= numeroelementos; i++)
             {
                 int indice = inventory.nEsimo(i);           //Mayor legibilidad//
-                info = info + "  " + m.PrintItemInfo(indice); //Dos espacios a modo de separador//
+                info = info + "\n" + m.PrintItemInfo(indice); //Dos espacios a modo de separador//
             }
             return info;
         }
