@@ -28,17 +28,17 @@ namespace Practica2fp2
         int entryRoom; // numero de la habitacion de entrada (leida del mapa)
         public Map(int numRooms, int numItems)
         {
-            nRooms = numRooms;
-            nItems = numItems;
-            rooms = new Room[nRooms];
-            items = new Item[nItems];
+            nRooms = 0;//Inicializamos el número de habitaciones y de Items a 0 para sumarlos
+            nItems = 0;//En el bucle de lectura//
+            rooms = new Room[numRooms]; 
+            items = new Item[numItems];
         }
         public void ReadMap(string file)
         {
             if (file != null)
             {
-                int i = 0;
-                int j = 0;
+                int i = 0; //Indice de habitaciones//
+                int j = 0; //Indice de objetos//
                 StreamReader f = new StreamReader(file);
                 int contador = 1; //Para contar las lineas//
                 while (!f.EndOfStream)
@@ -51,12 +51,14 @@ namespace Practica2fp2
                         {
                             rooms[i] = CreateRoom(linea);
                             i++;
+                            nRooms++;
                         }
                         else if (linea.StartsWith("conn")) AddConections(linea);
                         else if (linea.StartsWith("item"))
                         {
                             items[j] = CreateItem(linea, j);
                             j++;
+                            nItems++;
                         }
                         else if (linea.StartsWith("entry"))
                         {
@@ -166,16 +168,16 @@ namespace Practica2fp2
         {
             int indice = -1;
             int i = 0;
-            while (i<items.Length && items[i].name != itemName) i++;
-            if (i < items.Length) indice = i; //Si lo ha encontrado, lo devolvemos//
+            while (i<nItems && items[i].name != itemName) i++;
+            if (i < nItems) indice = i; //Si lo ha encontrado, lo devolvemos//
             return indice;
         }
         private int FindRoomByName(string roomName)
         {
             int indice = -1;
             int i = 0;
-            while (i < rooms.Length && rooms[i].name != roomName) i++;
-            if (i < rooms.Length) indice = i; //Si ha encontrado la habitación, la devolvemos//
+            while (i < nRooms && rooms[i].name != roomName) i++;
+            if (i < nRooms) indice = i; //Si ha encontrado la habitación, la devolvemos//
             return indice;
         }
         public int GetItemWeight(int itemNumber)

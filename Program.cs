@@ -8,7 +8,7 @@ namespace Practica2fp2
     {
         static void Main(string[] args)
         {
-            Map mapa = new Map(100, 100);
+            Map mapa = new Map(100, 100); //Creamos un mapa  sobrecargado//
             string file = "mapa.dat";
             bool mapaleido = false;
             try
